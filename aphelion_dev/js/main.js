@@ -11,14 +11,9 @@ function main(){
 
 	function preload() {
 
-	    game.load.image('sky', 'img/sky.png');
-	    game.load.image('ground', 'img/platform.png');
 	    game.load.image('star', 'img/star.png');
-	    game.load.spritesheet('dude', 'img/dude.png', 32, 48);
 	    game.load.image('background','img/starfield.png');
 	    game.load.image('background2','img/starfield.png');
-	    // game.load.spritesheet('sword','img/shitsword.png',64, 64);
-	    game.load.image('sword', 'img/shitsword_skinny.png');
 	    game.load.image('ship', 'img/ship.png');
 	    game.load.image('beam', 'img/beam.png');
 	    game.load.image('enemy', 'img/enemy.png');
@@ -62,40 +57,9 @@ function main(){
 		starfield2 = game.add.tileSprite(0, 0, 600, 900, 'background2');
 
 	    game.world.setBounds(0, 0, 600, 900);
-
-	    // game.physics.startSystem(Phaser.Physics.P2JS);
-	    // game.physics.p2.setImpactEvents(true);
-	    // game.physics.p2.restitution = 0.9;
-	    //  We're going to be using physics, so enable the Arcade Physics system
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 
-	    //  A simple background for our game
-	    // game.add.sprite(0, 0, 'sky');
-
-	    //  The platforms group contains the ground and the 2 ledges we can jump on
-	    platforms = game.add.group();
-
-	    //  We will enable physics for any object that is created in this group
-	    platforms.enableBody = true;
-
-	    // Here we create the ground.
-	    // var ground = platforms.create(0, game.world.height - 64, 'ground');
-
-	    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-	    // ground.scale.setTo(2, 2);
-
-	    //  This stops it from falling away when you jump on it
-	    // ground.body.immovable = true;
-
-	    //  Now let's create two ledges
-	    // var ledge = platforms.create(400, 400, 'ground');
-	    // ledge.body.immovable = true;
-
-	    // ledge = platforms.create(-150, 250, 'ground');
-	    // ledge.body.immovable = true;
-
-	    // The player and its settings
-	    // player = game.add.sprite(32, game.world.height - 150, 'dude');
+	   
 	    playerGroup = game.add.group();
 
 	    player = playerCreate(game, playerGroup);
@@ -103,23 +67,11 @@ function main(){
 	    beam = beamCreate(game,playerGroup);
 	    player.addChild(beam);
 	    beam.visible = false;
-	    // player.sword.anchor.setTo(0.15, 0.5);
 
-	    // cursors = game.input.keyboard.createCursorKeys();
-
-	    //  Notice that the sprite doesn't have any momentum at all,
-	    //  it's all just set by the camera follow type.
-	    //  0.1 is the amount of linear interpolation to use.
-	    //  The smaller the value, the smooth the camera (and the longer it takes to catch up)
-	    
-
-	    //  Finally some stars to collect
 	    stars = game.add.group();
 
-	    //  We will enable physics for any star that is created in this group
 	    stars.enableBody = true;
 
-	    // stars.body.setCircle(15);
 	    
 		var bmd = game.add.bitmapData(powerBarWidth, powerBarHeight);
 		
@@ -141,45 +93,16 @@ function main(){
 
 
 
-
-	    //  Here we'll create 12 of them evenly spaced apart
-	    // for (var i = 0; i < 12; i++)
-	    // {
-	    //     //  Create a star inside of the 'stars' group
-	    //     var star = stars.create(i * 70, 30, 'star');
-
-	    //     //  Let gravity do its thing
-	    //     star.body.gravity.y = 100;
-	    //     // star.body.gravity.x = 300;
-    	// 	// game.physics.p2.enable(star, true);
-
-    	// 	// star.body.setCircle(15);
-
-
-	    //     //  This just gives each star a slightly random bounce value
-	    //     star.body.bounce.y = 0.7 + Math.random() * 0.2;
-	    // }
-
-	    //  The score
 	    flavorText = game.add.text(16, game.world.height - 100, 'blank', { fontSize: '16px', fill: '#fff' });
 
-	    //  Our controls.
-	    // cursors = game.input.keyboard.createCursorKeys();
 	    fire = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 	    cursors = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
 
-	 //    var wasd = {
-		//   up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-		//   down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-		//   left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-		//   right: game.input.keyboard.addKey(Phaser.Keyboard.D),
-		// };
 
 		enemies = game.add.group();
 	    enemies.enableBody = true;
 	    enemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-	    // The enemy's bullets
 	    enemyBullets = game.add.group();
 	    enemyBullets.enableBody = true;
 	    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -189,10 +112,6 @@ function main(){
 	    enemyBullets.setAll('outOfBoundsKill', true);
 	    enemyBullets.setAll('checkWorldBounds', true);
 
-
-		console.log(player.body.debug);
-		// console.log(sword.body.debug);
-		// console.log(stars.body.debug);
 	    
 	}
 
@@ -210,8 +129,7 @@ function main(){
 	    game.physics.arcade.overlap(player, enemyBullets, collideEnemyBullet, null, this);
 	    // game.physics.arcade.overlap(beam, enemyBullets, collideEnemyBullet, null, this);
 
-	    //  Reset the players velocity (movement)
-	    // player.body.setZeroVelocity();
+	
 	    var swipeDirection = playerMovement(cursors, player);
 	    
 	    power = beamSwipe(fire, beam, power);
@@ -219,7 +137,6 @@ function main(){
 
 	    starfield.tilePosition.y += scrollSpeed;
     	starfield2.tilePosition.y += scrollSpeed/2;
-		// swordStickToParent(sword, player);
 
 		powerBarFore.width = (600 * power) / 100;
 		if (power > 100) { power = 100;}
@@ -236,10 +153,7 @@ function main(){
 		level = levelChecker(stars, enemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
 	    flavorState = level[0];
 	    flavorText = level[1];
-	    // if (cursors.up.isDown && player.body.touching.down)
-	    // {
-	    //     player.body.velocity.y = -350;
-	    // }
+
 	    power = power - powerDrainAlways;
 
 	    if (game.time.now > firingTimer)
