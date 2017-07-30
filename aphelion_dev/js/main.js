@@ -21,6 +21,8 @@ function main(){
 	    game.load.image('sword', 'img/shitsword_skinny.png');
 	    game.load.image('ship', 'img/ship.png');
 	    game.load.image('beam', 'img/beam.png');
+	    game.load.image('enemy', 'img/enemy.png');
+	    game.load.image('enemyBullet', 'img/bullet.png');
 
 	}
 
@@ -46,6 +48,13 @@ function main(){
 
 	var timer = 0;
 	var flavorState = "start";
+
+	var enemies;
+	var beamEnergy = 0.8;
+	var starEnergy = 10;
+
+	var firingTimer = 0;
+	var enemyBullets;
 
 	function create() {
 
@@ -152,7 +161,7 @@ function main(){
 	    // }
 
 	    //  The score
-	    flavorText = game.add.text(16, game.world.height - 100, 'Use WASD to move your ship\nPress SPACE to fire absorption beam', { fontSize: '16px', fill: '#fff' });
+	    flavorText = game.add.text(16, game.world.height - 100, 'blank', { fontSize: '16px', fill: '#fff' });
 
 	    //  Our controls.
 	    // cursors = game.input.keyboard.createCursorKeys();
@@ -165,6 +174,20 @@ function main(){
 		//   left: game.input.keyboard.addKey(Phaser.Keyboard.A),
 		//   right: game.input.keyboard.addKey(Phaser.Keyboard.D),
 		// };
+
+		enemies = game.add.group();
+	    enemies.enableBody = true;
+	    enemies.physicsBodyType = Phaser.Physics.ARCADE;
+
+	    // The enemy's bullets
+	    enemyBullets = game.add.group();
+	    enemyBullets.enableBody = true;
+	    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+	    enemyBullets.createMultiple(30, 'enemyBullet');
+	    enemyBullets.setAll('anchor.x', 0.5);
+	    enemyBullets.setAll('anchor.y', 1);
+	    enemyBullets.setAll('outOfBoundsKill', true);
+	    enemyBullets.setAll('checkWorldBounds', true);
 
 
 		console.log(player.body.debug);
@@ -182,6 +205,10 @@ function main(){
 	    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
 	    game.physics.arcade.overlap(player, stars, collideStar, null, this);
 	    game.physics.arcade.overlap(beam, stars, collectStar, null, this);
+	    game.physics.arcade.overlap(player, enemies, collideEnemy, null, this);
+	    game.physics.arcade.overlap(beam, enemies, collectEnemy, null, this);
+	    game.physics.arcade.overlap(player, enemyBullets, collideEnemyBullet, null, this);
+	    // game.physics.arcade.overlap(beam, enemyBullets, collideEnemyBullet, null, this);
 
 	    //  Reset the players velocity (movement)
 	    // player.body.setZeroVelocity();
@@ -206,7 +233,7 @@ function main(){
 
 		timer += 0.0001;
 		console.log("timer:"+timer);
-		level = levelChecker(stars, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
+		level = levelChecker(stars, enemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
 	    flavorState = level[0];
 	    flavorText = level[1];
 	    // if (cursors.up.isDown && player.body.touching.down)
@@ -215,32 +242,39 @@ function main(){
 	    // }
 	    power = power - powerDrainAlways;
 
+	    if (game.time.now > firingTimer)
+        {
+            firingTimer = enemyFires(game, player, enemies, enemyBullets, firingTimer);
+        }
+
 	}
 
 	
 
 	function collectStar (player, star) {
-	    
-	    // Removes the star from the screen
 	    star.kill();
-
-	    //  Add and update the score
-	    // score += 10;
-	    // scoreText.text = 'Score: ' + score;
-	    power += 20;
-
+	    power += starEnergy;
+	}
+	function collideStar (player, star) {
+	    star.kill();
+	    power -= starEnergy;
 	}
 
-	function collideStar (player, star) {
-	    
-	    // Removes the star from the screen
-	    star.kill();
+	function collideEnemy(player, enemy){
+		enemy.kill();
+	    power -= 20;
+	}
+	function collectEnemy(beam, enemy){
+		enemy.energy -= beamEnergy;
+		power += beamEnergy;
+		if(enemy.energy < 0){
+			enemy.kill();
+		}
+	}
 
-	    //  Add and update the score
-	    // score += 10;
-	    // scoreText.text = 'Score: ' + score;
-	    power -= 10;
-
+	function collideEnemyBullet (player, bullet) {
+	    bullet.kill();
+	    power -= getBulletEnergy();
 	}
 
 
