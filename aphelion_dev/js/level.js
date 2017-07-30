@@ -95,17 +95,17 @@ function levelChecker(stars, enemies, secondGenEnemies, timer, flavorState, flav
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*11 && flavorState == "wave11"){
-			flavorText.text = 'The [race] are a differently-minded people.\nHighly intelligent, they surpass all others in technological advancement.\nThey knew this day would come.';
+			flavorText.text = 'We are a differently-minded people.\nHighly intelligent, we surpass all others in technological advancement.\nWe knew this day would come.';
 			flavorState = "wave12";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*12 && flavorState == "wave12"){
-			flavorText.text = 'A peaceful race, the [race] opted not to pillage.\nInstead they raised their defenses,\nTo develop and protect that which is most precious...';
+			flavorText.text = 'A peaceful race, the we opted not to pillage.\nInstead we raised our defenses,\nTo develop and protect that which is most precious...';
 			flavorState = "wave13";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*13 && flavorState == "wave13"){
-			flavorText.text = 'A device that would save their empire...\nA device that would save their universe...\nThe [race]’s crowning achievement...';
+			flavorText.text = 'A device that would save our empire...\nA device that would save our universe...\nOur crowning achievement...';
 			flavorState = "wave14";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
@@ -115,16 +115,16 @@ function levelChecker(stars, enemies, secondGenEnemies, timer, flavorState, flav
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*15 && flavorState == "wave15"){
-			flavorText.text = 'This device would allow them to explore the multiverse,\nAnd therefore open the path to unlimited energy,\nSaving themselves from imminent annihilation.';
+			flavorText.text = 'This device would allow us to explore the multiverse,\nAnd therefore open the path to unlimited energy,\nSaving our race from imminent annihilation.';
 			flavorState = "wave16";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*16 && flavorState == "wave16"){
-			flavorText.text = 'However, they have run into a problem...\nEnergy reserves are low.\nIt is all they can do to maintain their defenses.';
+			flavorText.text = 'However, we have run into a problem...\nEnergy reserves are low.\nIt is all we can do to maintain our defenses.';
 			flavorState = "wave17";
 			generateWave(stars);
 		}else if (timer > timerInterval*17 && flavorState == "wave17"){
-			flavorText.text = 'There is not enough left to power the Warp Drive,\nWhile keeping their people safe from destruction.\nHostile forces loom just beyond their borders...';
+			flavorText.text = 'There is not enough left to power the Warp Drive,\nWhile keeping our people safe from destruction.\nHostile forces loom just beyond our borders...';
 			flavorState = "wave18";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
@@ -134,22 +134,22 @@ function levelChecker(stars, enemies, secondGenEnemies, timer, flavorState, flav
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*19 && flavorState == "wave19"){
-			flavorText.text = 'Left with no other option,\nThe [race] installed the drive on their greatest ship...\nThe Starseeker.';
+			flavorText.text = 'Left with no other option,\nOur engineers installed the drive onto our greatest ship...\nThe Starseeker.';
 			flavorState = "wave20";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*20 && flavorState == "wave20"){
-			flavorText.text = 'A grand ship,\nCrewed by their best and brightest\nThe Starseeker is the pride of the [race]’s fleet.';
+			flavorText.text = 'A grand ship,\nCrewed by the best and brightest\nThe Starseeker is the pride of the the fleet.';
 			flavorState = "wave21";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*21 && flavorState == "wave21"){
-			flavorText.text = 'Given all of the remaining free power in the [system],\nThe crew has been sent off into the barren wastes...\nThe guardians of the last hope for the universe.';
+			flavorText.text = 'Given all of the remaining free power in the Aphilion system,\nThe crew has been sent off into the barren wastes...\nThe guardians of the last hope for the universe.';
 			flavorState = "wave22";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
 		}else if (timer > timerInterval*22 && flavorState == "wave22"){
-			flavorText.text = 'Resources must be gathered to sustain the ship...\nWith enough leftover to power the Warp Drive,\nAnd bring new resources back to [system].';
+			flavorText.text = 'Resources must be gathered to sustain the ship...\nWith enough leftover to power the Warp Drive,\nAnd bring new resources back to the Aphilion system.';
 			flavorState = "wave23";
 			generateWave(stars,enemies);
 			generateSecondGenWave(secondGenEnemies);
