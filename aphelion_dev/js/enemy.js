@@ -1,9 +1,9 @@
 
 
-var enemyMaxEnergy = 30;
+var enemyMaxEnergy = 50;
 var livingEnemies = [];
 var bulletEnergy = 10;
-var firingInterval = 1500;
+var firingInterval = 900;
 var bulletSpeed = 150;
 
 function getBulletEnergy(){

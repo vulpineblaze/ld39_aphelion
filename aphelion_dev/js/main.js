@@ -17,7 +17,14 @@ function main(){
 	    game.load.image('ship', 'img/ship.png');
 	    game.load.image('beam', 'img/beam.png');
 	    game.load.image('enemy', 'img/enemy.png');
+	    game.load.image('enemy2', 'img/enemy2.png');
 	    game.load.image('enemyBullet', 'img/bullet.png');
+
+        game.load.audio('boden', ['audio/Scorched_Circuits.mp3', 
+        	'audio/Scorched_Circuits.ogg']);
+        game.load.audio('beam1', 'audio/Laser_Shoot.wav');
+        game.load.audio('beam2', 'audio/beam2.mp3');
+
 
 	}
 
@@ -45,13 +52,26 @@ function main(){
 	var flavorState = "start";
 
 	var enemies;
-	var beamEnergy = 0.8;
+	var secondGenEnemies;
+	var beamEnergy = 1.5;
 	var starEnergy = 10;
 
 	var firingTimer = 0;
 	var enemyBullets;
 
+	var beam1sfx;
+	var beam2sfx;
+
 	function create() {
+
+	    music = game.add.audio('boden');
+	    music.play();
+
+		beam1sfx = game.add.audio('beam1');
+		beam2sfx = game.add.audio('beam2');
+    	beam1sfx.allowMultiple = true;
+
+
 
 		starfield = game.add.tileSprite(0, 0, 600, 900, 'background');
 		starfield2 = game.add.tileSprite(0, 0, 600, 900, 'background2');
@@ -69,8 +89,9 @@ function main(){
 	    beam.visible = false;
 
 	    stars = game.add.group();
-
 	    stars.enableBody = true;
+	    stars.setAll('outOfBoundsKill', true);
+	    stars.setAll('checkWorldBounds', true);
 
 	    
 		var bmd = game.add.bitmapData(powerBarWidth, powerBarHeight);
@@ -102,6 +123,14 @@ function main(){
 		enemies = game.add.group();
 	    enemies.enableBody = true;
 	    enemies.physicsBodyType = Phaser.Physics.ARCADE;
+	    enemies.setAll('outOfBoundsKill', true);
+	    enemies.setAll('checkWorldBounds', true);
+
+		secondGenEnemies = game.add.group();
+	    secondGenEnemies.enableBody = true;
+	    secondGenEnemies.physicsBodyType = Phaser.Physics.ARCADE;
+	    secondGenEnemies.setAll('outOfBoundsKill', true);
+	    secondGenEnemies.setAll('checkWorldBounds', true);
 
 	    enemyBullets = game.add.group();
 	    enemyBullets.enableBody = true;
@@ -111,6 +140,8 @@ function main(){
 	    enemyBullets.setAll('anchor.y', 1);
 	    enemyBullets.setAll('outOfBoundsKill', true);
 	    enemyBullets.setAll('checkWorldBounds', true);
+
+
 
 	    
 	}
@@ -126,6 +157,8 @@ function main(){
 	    game.physics.arcade.overlap(beam, stars, collectStar, null, this);
 	    game.physics.arcade.overlap(player, enemies, collideEnemy, null, this);
 	    game.physics.arcade.overlap(beam, enemies, collectEnemy, null, this);
+	    game.physics.arcade.overlap(player, secondGenEnemies, collideEnemy, null, this);
+	    game.physics.arcade.overlap(beam, secondGenEnemies, collectEnemy, null, this);
 	    game.physics.arcade.overlap(player, enemyBullets, collideEnemyBullet, null, this);
 	    // game.physics.arcade.overlap(beam, enemyBullets, collideEnemyBullet, null, this);
 
@@ -145,12 +178,14 @@ function main(){
 			power = 0;
 			flavorText.text = "Click to Restart";
 			game.input.onTap.addOnce(restart,this);
+	    	music.stop();
+
 		}
-		console.log("power:"+power+ " bar:"+powerBarFore.width);
+		// console.log("power:"+power+ " bar:"+powerBarFore.width);
 
 		timer += 0.0001;
-		console.log("timer:"+timer);
-		level = levelChecker(stars, enemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
+		// console.log("timer:"+timer);
+		level = levelChecker(stars, enemies, secondGenEnemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
 	    flavorState = level[0];
 	    flavorText = level[1];
 
@@ -168,6 +203,8 @@ function main(){
 	function collectStar (player, star) {
 	    star.kill();
 	    power += starEnergy;
+	    beam1sfx.play();
+
 	}
 	function collideStar (player, star) {
 	    star.kill();
@@ -184,11 +221,14 @@ function main(){
 		if(enemy.energy < 0){
 			enemy.kill();
 		}
+	    beam1sfx.play();
 	}
 
 	function collideEnemyBullet (player, bullet) {
 	    bullet.kill();
 	    power -= getBulletEnergy();
+	    beam2sfx.play();
+
 	}
 
 
@@ -203,6 +243,11 @@ function main(){
 		flavorState = "start";
 		timer = 0;
 		stars.removeAll();
+		enemies.removeAll();
+		secondGenEnemies.removeAll();
+		enemyBullets.removeAll();
+
+	    music.play();
 
 
 	}
