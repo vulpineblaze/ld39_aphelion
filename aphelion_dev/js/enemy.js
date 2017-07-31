@@ -1,9 +1,9 @@
 
 
-var enemyMaxEnergy = 50;
+var enemyMaxEnergy = 30;
 var livingEnemies = [];
 var bulletEnergy = 10;
-var firingInterval = 900;
+var firingInterval = 0.9;
 var bulletSpeed = 150;
 
 function getBulletEnergy(){
@@ -14,6 +14,7 @@ function enemySpawn(x,y, enemies, gravity){
 	var enemy = enemies.create(x, y, 'enemy');
 	enemy.body.gravity.y = gravity;
 	enemy.energy = enemyMaxEnergy;
+    // console.log("energy:"+enemy.energy);
 	return enemy;
 }
 
@@ -36,7 +37,7 @@ function enemyFires(game, player, enemies,enemyBullets, firingTimer){
         enemyBullet.reset(shooter.body.x, shooter.body.y);
 
         game.physics.arcade.moveToObject(enemyBullet,player,bulletSpeed);
-        firingTimer = game.time.now + firingInterval;
+        firingTimer = game.time.totalElapsedSeconds() + firingInterval;
     }
     return firingTimer;
 }

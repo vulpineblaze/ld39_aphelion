@@ -11,7 +11,7 @@ function main(){
 
 	function preload() {
 
-	    game.load.image('star', 'img/star.png');
+	    game.load.image('star', 'img/asteroid.png');
 	    game.load.image('background','img/starfield.png');
 	    game.load.image('background2','img/starfield.png');
 	    game.load.image('ship', 'img/ship.png');
@@ -19,10 +19,12 @@ function main(){
 	    game.load.image('enemy', 'img/enemy.png');
 	    game.load.image('enemy2', 'img/enemy2.png');
 	    game.load.image('enemyBullet', 'img/bullet.png');
+	    game.load.image('end', 'img/end.png');
 
         game.load.audio('boden', ['audio/Scorched_Circuits.mp3', 
         	'audio/Scorched_Circuits.ogg']);
         game.load.audio('beam1', 'audio/Laser_Shoot.wav');
+        game.load.audio('beam2', 'audio/beam2.mp3');
         game.load.audio('beam2', 'audio/beam2.mp3');
 
 
@@ -42,7 +44,7 @@ function main(){
 	var flavorText;
 
 	var power = 100;
-	var powerDrainAlways = 0.1;
+	var powerDrainAlways = 0.05;
 	var powerBarBack;
 	var powerBarFore;
 	var powerBarWidth = 600 // example;
@@ -57,10 +59,13 @@ function main(){
 	var starEnergy = 10;
 
 	var firingTimer = 0;
+	var secondFiringTimer = 0;
 	var enemyBullets;
 
 	var beam1sfx;
 	var beam2sfx;
+
+	var the_end;
 
 	function create() {
 
@@ -135,12 +140,14 @@ function main(){
 	    enemyBullets = game.add.group();
 	    enemyBullets.enableBody = true;
 	    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
-	    enemyBullets.createMultiple(30, 'enemyBullet');
+	    enemyBullets.createMultiple(60, 'enemyBullet');
 	    enemyBullets.setAll('anchor.x', 0.5);
 	    enemyBullets.setAll('anchor.y', 1);
 	    enemyBullets.setAll('outOfBoundsKill', true);
 	    enemyBullets.setAll('checkWorldBounds', true);
 
+		the_end = game.add.sprite(0, 0, 'end');
+		the_end.visible=false;
 
 
 	    
@@ -155,10 +162,13 @@ function main(){
 	    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
 	    game.physics.arcade.overlap(player, stars, collideStar, null, this);
 	    game.physics.arcade.overlap(beam, stars, collectStar, null, this);
+
 	    game.physics.arcade.overlap(player, enemies, collideEnemy, null, this);
 	    game.physics.arcade.overlap(beam, enemies, collectEnemy, null, this);
+
 	    game.physics.arcade.overlap(player, secondGenEnemies, collideEnemy, null, this);
 	    game.physics.arcade.overlap(beam, secondGenEnemies, collectEnemy, null, this);
+
 	    game.physics.arcade.overlap(player, enemyBullets, collideEnemyBullet, null, this);
 	    // game.physics.arcade.overlap(beam, enemyBullets, collideEnemyBullet, null, this);
 
@@ -185,15 +195,33 @@ function main(){
 
 		timer += 0.0001;
 		// console.log("timer:"+timer);
-		level = levelChecker(stars, enemies, secondGenEnemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
+		level = levelChecker(game, stars, enemies, secondGenEnemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
 	    flavorState = level[0];
 	    flavorText = level[1];
 
+	    // console.log("pre the_end: "+flavorState+" time:"+game.time.totalElapsedSeconds());
+
+	    if(flavorState=="end"){
+			flavorState = "limbo";
+
+	    	player.kill(); 
+			power = 0;
+			flavorText.text = "Click to Restart";
+			the_end.visible = true;
+			game.input.onTap.addOnce(restart,this);
+	    	music.stop();
+	    	console.log("the_end: "+flavorState);
+	    }
+
 	    power = power - powerDrainAlways;
 
-	    if (game.time.now > firingTimer)
+	    if (game.time.totalElapsedSeconds() > firingTimer)
         {
             firingTimer = enemyFires(game, player, enemies, enemyBullets, firingTimer);
+        }
+        if (game.time.totalElapsedSeconds() > secondFiringTimer)
+        {
+            secondFiringTimer = secondEnemyFires(game, player, secondGenEnemies, enemyBullets, secondFiringTimer);
         }
 
 	}
@@ -233,6 +261,13 @@ function main(){
 
 
 	function restart () {
+		
+	    console.log("restart");
+		if(the_end){
+			the_end.visible = false;
+			// the_end.kill();
+			// the_end = "";
+		}
 
 	    //  A new level starts
 	    power = 100;
@@ -242,12 +277,18 @@ function main(){
 		flavorText.text = "restart";
 		flavorState = "start";
 		timer = 0;
+		game.time.reset();
 		stars.removeAll();
 		enemies.removeAll();
 		secondGenEnemies.removeAll();
-		enemyBullets.removeAll();
+		// enemyBullets.removeAll();
+		firingTimer=0;
+		secondFiringTimer=0;
 
 	    music.play();
+
+	    console.log("restart_done:"+flavorState+" time:"+game.time.totalElapsedSeconds());
+
 
 
 	}

@@ -1,42 +1,42 @@
 
 
-var enemyMaxEnergy = 80;
-var livingEnemies = [];
-var bulletEnergy = 10;
-var firingInterval = 450;
-var bulletSpeed = 200;
+var enemyMaxEnergySecondGen = 80;
+var livingEnemiesSecondGen = [];
+var bulletEnergySecondGen = 10;
+var firingIntervalSecondGen = 0.45;
+var bulletSpeedSecondGen = 200;
 
 function getSecondBulletEnergy(){
-	return bulletEnergy;
+	return bulletEnergySecondGen;
 }
 
 function secondEnemySpawn(x,y, enemies, gravity){
 	var enemy = enemies.create(x, y, 'enemy2');
 	enemy.body.gravity.y = gravity;
-	enemy.energy = enemyMaxEnergy;
+	enemy.energy = enemyMaxEnergySecondGen;
 	return enemy;
 }
 
 function secondEnemyFires(game, player, enemies,enemyBullets, firingTimer){
 	enemyBullet = enemyBullets.getFirstExists(false);
-	livingEnemies.length=0;
+	livingEnemiesSecondGen.length=0;
 	enemies.forEachAlive(function(enemy){
 
         // put every living enemy in an array
-        livingEnemies.push(enemy);
+        livingEnemiesSecondGen.push(enemy);
     });
-	if (enemyBullet && livingEnemies.length > 0)
+	if (enemyBullet && livingEnemiesSecondGen.length > 0)
     {
         
-        var random=game.rnd.integerInRange(0,livingEnemies.length-1);
+        var random=game.rnd.integerInRange(0,livingEnemiesSecondGen.length-1);
 
         // randomly select one of them
-        var shooter=livingEnemies[random];
+        var shooter=livingEnemiesSecondGen[random];
         // And fire the bullet from this enemy
         enemyBullet.reset(shooter.body.x, shooter.body.y);
 
-        game.physics.arcade.moveToObject(enemyBullet,player,bulletSpeed);
-        firingTimer = game.time.now + firingInterval;
+        game.physics.arcade.moveToObject(enemyBullet,player,bulletSpeedSecondGen);
+        firingTimer = game.time.totalElapsedSeconds() + firingIntervalSecondGen;
     }
     return firingTimer;
 }
