@@ -54,7 +54,7 @@ function playerMovement(game, cursors, player){
     console.log(game.physics.arcade.distanceToPointer(player));
 
     if(game.physics.arcade.distanceToPointer(player) > 10){
-        game.physics.arcade.moveToPointer(player, max_velocity*100);
+        game.physics.arcade.moveToPointer(player, max_velocity*150);
     }
 
 

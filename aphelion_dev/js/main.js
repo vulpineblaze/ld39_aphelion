@@ -23,7 +23,7 @@ function main(){
 
         game.load.audio('boden', ['audio/Scorched_Circuits.mp3', 
         	'audio/Scorched_Circuits.ogg']);
-        game.load.audio('beam1', 'audio/Laser_Shoot.wav');
+        game.load.audio('beam1', 'audio/Laser_Shoot2.wav');
         game.load.audio('beam2', 'audio/Hit_Hurt2.wav');
         // game.load.audio('beam2', 'audio/beam2.mp3');
 

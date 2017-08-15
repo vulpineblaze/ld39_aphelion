@@ -57,6 +57,8 @@ function levelChecker(game, stars, enemies, secondGenEnemies, timer, flavorState
 			flavorState = "wave2";			
 			// flavorState = "end";			
 			generateWave(stars,enemies);
+
+
 		}else if (game.time.totalElapsedSeconds() > waveInterval*2 && flavorState == "wave2"){
 			flavorText.text = 'After a centillion years, heat death becomes an inevitability.\nWith almost no thermodynamic free energy left in the universe,\nThere is little hope for those who remain.';
 			// flavorText.text = "more are coming";
@@ -175,6 +177,15 @@ function levelChecker(game, stars, enemies, secondGenEnemies, timer, flavorState
 		}else if (game.time.totalElapsedSeconds() > waveInterval*25.5 && flavorState == "wave25"){
 			flavorText.text = '';
 			flavorState = "end";
+
+
+			FB.ui(
+			 {
+			  method: 'share',
+			  quote: 'I just beat Level 1 on Aphelion!',
+			  href: 'http://jonathangiacomelli.spacetechnology.net/aphelion/'
+			}, function(response){});
+			
 		}else{
 
 		}
