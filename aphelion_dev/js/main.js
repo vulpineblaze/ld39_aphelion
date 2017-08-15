@@ -9,6 +9,10 @@ function main(){
 
 	var game = new Phaser.Game(600, 900, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
+
+	var enemyArray =[];
+	var enemyTypeCount = 2;
+
 	function preload() {
 
 	    game.load.image('star', 'img/asteroid.png');
@@ -16,8 +20,13 @@ function main(){
 	    game.load.image('background2','img/starfield.png');
 	    game.load.image('ship', 'img/ship.png');
 	    game.load.image('beam', 'img/beam.png');
-	    game.load.image('enemy', 'img/enemy.png');
-	    game.load.image('enemy2', 'img/enemy2.png');
+	    // game.load.image('enemy', 'img/enemy.png');
+	    // game.load.image('enemy2', 'img/enemy2.png');
+
+	    for (var i = 0; i < enemyTypeCount; i++) {
+	    	game.load.image('enemy'+(i+1), 'img/enemy'+(i+1)+'.png');
+	    	console.log("loaded image enemy:"+(i+1));
+	    }
 	    game.load.image('enemyBullet', 'img/bullet.png');
 	    game.load.image('end', 'img/end.png');
 
@@ -53,14 +62,23 @@ function main(){
 	var timer = 0;
 	var flavorState = "start";
 
-	var enemies;
-	var secondGenEnemies;
+	// var enemies;
+	// var secondGenEnemies;
+
+
 	var beamEnergy = 1.5;
 	var starEnergy = 10;
 
-	var firingTimer = 0;
-	var secondFiringTimer = 0;
+	var firingTimerArray = [0,0];
+	var bulletSpeedArray = [150,200];
+	var firingIntervalArray = [0.9,0.8];
+	var enemyMaxEnergyArray = [30,80];
+
+
+	// var firingTimer = 0;
+	// var secondFiringTimer = 0;
 	var enemyBullets;
+	var bulletEnergy = 20;
 
 	var beam1sfx;
 	var beam2sfx;
@@ -127,18 +145,32 @@ function main(){
 	    fire = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 	    cursors = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D } );
 
+	    for (var i = 0; i < enemyTypeCount; i++) {
+	    	var tempEnemies;
+	    	tempEnemies = game.add.group();
+		    tempEnemies.enableBody = true;
+		    tempEnemies.physicsBodyType = Phaser.Physics.ARCADE;
+		    tempEnemies.setAll('outOfBoundsKill', true);
+		    tempEnemies.setAll('checkWorldBounds', true);
+		    tempEnemies.maxEnergy = enemyMaxEnergyArray[i];
+		    tempEnemies.index = i+1;
+		    enemyArray.push(tempEnemies);
+	    }
+	    
+		console.log(enemyArray);
 
-		enemies = game.add.group();
-	    enemies.enableBody = true;
-	    enemies.physicsBodyType = Phaser.Physics.ARCADE;
-	    enemies.setAll('outOfBoundsKill', true);
-	    enemies.setAll('checkWorldBounds', true);
 
-		secondGenEnemies = game.add.group();
-	    secondGenEnemies.enableBody = true;
-	    secondGenEnemies.physicsBodyType = Phaser.Physics.ARCADE;
-	    secondGenEnemies.setAll('outOfBoundsKill', true);
-	    secondGenEnemies.setAll('checkWorldBounds', true);
+		// enemies = game.add.group();
+	 //    enemies.enableBody = true;
+	 //    enemies.physicsBodyType = Phaser.Physics.ARCADE;
+	 //    enemies.setAll('outOfBoundsKill', true);
+	 //    enemies.setAll('checkWorldBounds', true);
+
+		// secondGenEnemies = game.add.group();
+	 //    secondGenEnemies.enableBody = true;
+	 //    secondGenEnemies.physicsBodyType = Phaser.Physics.ARCADE;
+	 //    secondGenEnemies.setAll('outOfBoundsKill', true);
+	 //    secondGenEnemies.setAll('checkWorldBounds', true);
 
 	    enemyBullets = game.add.group();
 	    enemyBullets.enableBody = true;
@@ -148,6 +180,7 @@ function main(){
 	    enemyBullets.setAll('anchor.y', 1);
 	    enemyBullets.setAll('outOfBoundsKill', true);
 	    enemyBullets.setAll('checkWorldBounds', true);
+	    // enemyBullets.setAll('energy', 20);
 
 		the_end = game.add.sprite(0, 0, 'end');
 		the_end.visible=false;
@@ -169,11 +202,16 @@ function main(){
 	    game.physics.arcade.overlap(player, stars, collideStar, null, this);
 	    game.physics.arcade.overlap(beam, stars, collectStar, null, this);
 
-	    game.physics.arcade.overlap(player, enemies, collideEnemy, null, this);
-	    game.physics.arcade.overlap(beam, enemies, collectEnemy, null, this);
+	    // game.physics.arcade.overlap(player, enemies, collideEnemy, null, this);
+	    // game.physics.arcade.overlap(beam, enemies, collectEnemy, null, this);
 
-	    game.physics.arcade.overlap(player, secondGenEnemies, collideEnemy, null, this);
-	    game.physics.arcade.overlap(beam, secondGenEnemies, collectEnemy, null, this);
+
+	    for (var i = 0; i < enemyTypeCount; i++) {
+		    game.physics.arcade.overlap(player, enemyArray[i], collideEnemy, null, this);
+		    game.physics.arcade.overlap(beam, enemyArray[i], collectEnemy, null, this);
+	    }
+
+
 
 	    game.physics.arcade.overlap(player, enemyBullets, collideEnemyBullet, null, this);
 	    // game.physics.arcade.overlap(beam, enemyBullets, collideEnemyBullet, null, this);
@@ -201,7 +239,7 @@ function main(){
 
 		timer += 0.0001;
 		// console.log("timer:"+timer);
-		level = levelChecker(game, stars, enemies, secondGenEnemies, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
+		level = levelChecker(game, stars, enemyArray, timer, flavorState, flavorText)	    //  Allow the player to jump if they are touching the ground.
 	    flavorState = level[0];
 	    flavorText = level[1];
 
@@ -221,14 +259,43 @@ function main(){
 
 	    power = power - powerDrainAlways;
 
-	    if (game.time.totalElapsedSeconds() > firingTimer)
-        {
-            firingTimer = enemyFires(game, player, enemies, enemyBullets, firingTimer);
-        }
-        if (game.time.totalElapsedSeconds() > secondFiringTimer)
-        {
-            secondFiringTimer = secondEnemyFires(game, player, secondGenEnemies, enemyBullets, secondFiringTimer);
-        }
+	    for (var i = 0; i < enemyTypeCount; i++) {
+	    	if (game.time.totalElapsedSeconds() > firingTimerArray[i])
+	        {
+	            // firingTimer[i] = enemyFires(game, player, enemies, enemyBullets, firingTimer);
+	            var livingEnemies=[];
+				enemyBullet = enemyBullets.getFirstExists(false);
+				enemyBullet.energy=20;
+				livingEnemies.length=0;
+				enemyArray[i].forEachAlive(function(enemy){
+
+			        // put every living enemy in an array
+			        livingEnemies.push(enemy);
+			    });
+				if (enemyBullet && livingEnemies.length > 0)
+			    {
+			        
+			        var random=game.rnd.integerInRange(0,livingEnemies.length-1);
+
+			        // randomly select one of them
+			        var shooter=livingEnemies[random];
+			        // And fire the bullet from this enemy
+			        enemyBullet.reset(shooter.body.x, shooter.body.y);
+
+			        game.physics.arcade.moveToObject(enemyBullet,player,bulletSpeedArray[i]);
+			        firingTimerArray[i] = game.time.totalElapsedSeconds() + firingIntervalArray[i];
+			    }
+	        }
+	    }
+
+	    // if (game.time.totalElapsedSeconds() > firingTimer)
+     //    {
+     //        firingTimer = enemyFires(game, player, enemies, enemyBullets, firingTimer);
+     //    }
+     //    if (game.time.totalElapsedSeconds() > secondFiringTimer)
+     //    {
+     //        secondFiringTimer = secondEnemyFires(game, player, secondGenEnemies, enemyBullets, secondFiringTimer);
+     //    }
 
 	}
 
@@ -264,11 +331,13 @@ function main(){
 
 	function collideEnemyBullet (player, bullet) {
 	    bullet.kill();
-	    power -= getBulletEnergy();
+	    console.log("bullet energy:"+bullet.energy);
+	    power -= bullet.energy;
 	    beam2sfx.play();
 
 	}
 
+	
 
 	function restart () {
 		
@@ -289,11 +358,15 @@ function main(){
 		timer = 0;
 		game.time.reset();
 		stars.removeAll();
-		enemies.removeAll();
-		secondGenEnemies.removeAll();
+	    for (var i = 0; i < enemyTypeCount; i++) {
+	    	enemyArray[i].removeAll();
+	    }
+
+		// enemies.removeAll();
+		// secondGenEnemies.removeAll();
 		// enemyBullets.removeAll();
-		firingTimer=0;
-		secondFiringTimer=0;
+		firingTimerArray=[0,0];
+		// secondFiringTimer=0;
 
 	    music.play();
 
