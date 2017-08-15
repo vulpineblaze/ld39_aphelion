@@ -1,9 +1,10 @@
 
 var max_velocity = 300; 
-
+var player;
+var local_game;
 
 function playerCreate(game, playerGroup){
-    var player;
+    local_game=game;
    	player = playerGroup.create(game.world.centerX, game.world.centerY, 'ship');
     player.name="ship"
 
@@ -21,6 +22,8 @@ function playerCreate(game, playerGroup){
 
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
+    // game.input.onDown.add(playerFollow, this);
+
     //  Our two animations, walking left and right.
     // player.animations.add('left', [0, 1, 2, 3], 10, true);
     // player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -32,8 +35,29 @@ function playerCreate(game, playerGroup){
 }
 
 
+function playerFollow(game) {
 
-function playerMovement(cursors, player){
+    //  If we don't it'll look very wrong
+    // game.camera.follow();
+
+    game.physics.arcade.moveToPointer(player, 100);
+
+    //  The maxTime parameter lets you control how fast it will arrive at the Pointer coords
+    // game.physics.arcade.moveToPointer(ball, 100, game.input.activePointer, 1000);
+
+
+}
+
+
+function playerMovement(game, cursors, player){
+
+    console.log(game.physics.arcade.distanceToPointer(player));
+
+    if(game.physics.arcade.distanceToPointer(player) > 10){
+        game.physics.arcade.moveToPointer(player, max_velocity*100);
+    }
+
+
 	player.body.velocity.x *= 0.01;
     player.body.velocity.y *= 0.01;
 

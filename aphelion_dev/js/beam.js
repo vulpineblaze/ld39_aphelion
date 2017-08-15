@@ -21,12 +21,12 @@ var rotateStep = 0.4;
 var lastDir = 'right';
 var powerDrain = 0.8;
 
-function beamSwipe(beamKey, beam, power){
+function beamSwipe(game, beamKey, beam, power){
     var swipeShift = {x:30,y:1};
 
     
 
-    if (beamKey.isDown)
+    if (beamKey.isDown || game.input.mousePointer.isDown)
     {
         beam.body.enable = true;
         beam.visible = true;

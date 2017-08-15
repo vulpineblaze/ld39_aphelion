@@ -24,8 +24,8 @@ function main(){
         game.load.audio('boden', ['audio/Scorched_Circuits.mp3', 
         	'audio/Scorched_Circuits.ogg']);
         game.load.audio('beam1', 'audio/Laser_Shoot.wav');
-        game.load.audio('beam2', 'audio/beam2.mp3');
-        game.load.audio('beam2', 'audio/beam2.mp3');
+        game.load.audio('beam2', 'audio/Hit_Hurt2.wav');
+        // game.load.audio('beam2', 'audio/beam2.mp3');
 
 
 	}
@@ -70,11 +70,14 @@ function main(){
 	function create() {
 
 	    music = game.add.audio('boden');
-	    music.play();
+	    // music.play();
+    	music.loopFull(0.6);
+
 
 		beam1sfx = game.add.audio('beam1');
 		beam2sfx = game.add.audio('beam2');
     	beam1sfx.allowMultiple = true;
+    	beam2sfx.allowMultiple = true;
 
 
 
@@ -155,9 +158,12 @@ function main(){
 
 	function update() {
 
-	    //  Collide the player and the stars with the platforms
-	    game.physics.arcade.collide(player, platforms);
-	    game.physics.arcade.collide(stars, platforms);
+
+
+
+    	// game.input.onHold.add(playerFollow, this);
+    	// game.physics.arcade.moveToPointer(player, 100, game.input.activePointer, 1000);
+    	// playerFollow(game);
 
 	    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
 	    game.physics.arcade.overlap(player, stars, collideStar, null, this);
@@ -173,9 +179,9 @@ function main(){
 	    // game.physics.arcade.overlap(beam, enemyBullets, collideEnemyBullet, null, this);
 
 	
-	    var swipeDirection = playerMovement(cursors, player);
+	    var swipeDirection = playerMovement(game, cursors, player);
 	    
-	    power = beamSwipe(fire, beam, power);
+	    power = beamSwipe(game, fire, beam, power);
 
 
 	    starfield.tilePosition.y += scrollSpeed;
@@ -237,11 +243,15 @@ function main(){
 	function collideStar (player, star) {
 	    star.kill();
 	    power -= starEnergy;
+	    beam2sfx.play();
+
 	}
 
 	function collideEnemy(player, enemy){
 		enemy.kill();
 	    power -= 20;
+	    beam2sfx.play();
+
 	}
 	function collectEnemy(beam, enemy){
 		enemy.energy -= beamEnergy;
