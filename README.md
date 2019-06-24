@@ -1,10 +1,5 @@
-# ld39_aphelion
-ld39 entry
-
-Test somethin
-
-# Project Name
-> Here goes your awesome project description!
+# Aphelion
+> Aphelion is an in browser space ship survival game, in which you pilot the Starseeker to save your people from the end of the universe.
 
 ## Table of contents
 * [General info](#general-info)
@@ -19,48 +14,36 @@ Test somethin
 * [Contact](#contact)
 
 ## General info
-Add more general information about project. What the purpose of the project is? Motivation?
-Put possible docs / coda link here.
+* Aphelion was created for the [Ludum Dare Game Competition (LD#39)](https://ldjam.com/about)
+* It is an in browser game where you use WASD to pilot your ship, the Starseeker.  Use your space bar to fire the absorption beam at space debris and other ships, to maintain power and blast obstacles out of your way.  Last until the end to learn the dramatic tale of the brave aliens, trying to outlast the end of the universe.
 
 ## Screenshots
-![Example screenshot](./img/screenshot.png)
+![screenshot](https://github.com/vulpineblaze/ld39_aphelion/blob/master/image_src/screenshotLD39.PNG)
 
 ## Technologies
-* Tech 1 - version 1.0
-* Tech 2 - version 2.0
-* Tech 3 - version 3.0
+* Phaser v2.5.0
 
 ## Setup
-Describe how to install / setup your local environement / add link to demo version.
+http://fusionbombsderp.com/ld39/
 
 ### Requirements
-If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+* Phaser v2.5.0, linked through CDN.
 
 ### Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Code Examples
-Show examples of usage:
-`put-your-code-here`
+Load via browser and play per instructions!
 
 ## Features
-List of features ready and TODOs for future development
-* Awesome feature 1
-* Awesome feature 2
-* Awesome feature 3
-
-To-do list:
-* Wow improvement to be done 1
-* Wow improvement to be done 2
+* Use WASD to move your starship, the Starseeker
+* Press the space bar to fire absorption beam
+* Keep an eye on your Power Bar, located at the top of the screen
+* You must gather enough Power to maintain the Starseeker, and extra enough to save your people
+* Avoid crashing into other ships and space debris, as this will also drain power
 
 ## Status
-Project is: _in progress_, _finished_, _no longer continue_ and why?
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Project is: _finished_
 
 ## Inspiration
-Add here credits. Project inspired by..., based on...
+This game was inspired by the prompt, and Star Trek.
 
 ## Contact
 Created by [@vulpineblaze](https://github.com/vulpineblaze) - feel free to contact me!
